@@ -1,0 +1,56 @@
+<resources>
+    <!-- brand -->
+    <string name="app_name">Compose Playground</string>
+    <string name="app_wordmark_compose">Fast Compose</string>
+    <string name="app_wordmark_playground">Playground</string>
+    <string name="app_powered_by">powered by</string>
+    <string name="app_fast_compose">Fast Compose</string>
+    <string name="app_nemo_editor">Nemo Editor</string>
+
+    <!-- top bar -->
+    <string name="toolbar_github">GitHub</string>
+    <string name="toolbar_theme">Theme</string>
+    <string name="toolbar_share">Share</string>
+    <string name="toolbar_details">About</string>
+    <string name="toolbar_more">More</string>
+    <string name="theme_light">Light</string>
+    <string name="theme_dark">Dark</string>
+
+    <!-- examples menu -->
+    <string name="toolbar_examples">Examples</string>
+    <string name="examples_welcome">Welcome</string>
+    <string name="examples_components">Components</string>
+    <string name="examples_dialogs">Dialogs and sheets</string>
+    <string name="examples_animations">Animations and gestures</string>
+    <string name="examples_canvas">Canvas</string>
+
+    <!-- share -->
+    <string name="msg_link_copied">Link copied</string>
+
+    <!-- editor bar -->
+    <string name="editor_undo">Undo</string>
+    <string name="editor_redo">Redo</string>
+    <string name="editor_search">Search</string>
+    <string name="editor_zoom_in">Larger font</string>
+    <string name="editor_zoom_out">Smaller font</string>
+    <string name="mode_edit">Code</string>
+    <string name="mode_split">Code and preview</string>
+    <string name="mode_preview">Preview</string>
+    <string name="preview_restart">Run again</string>
+    <string name="logs_title">Logs</string>
+    <string name="logs_show">Show logs</string>
+    <string name="logs_hide">Hide logs</string>
+
+    <!-- details dialog -->
+    <string name="details_title">About</string>
+    <string name="details_description">Write Jetpack Compose and see it live. There is no compiler and no build: Fast Compose parses and runs the code right in the app.</string>
+    <string name="details_versions">Versions</string>
+    <string name="details_fast_compose">fast-compose</string>
+    <string name="details_nemo">nemo-editor</string>
+    <string name="details_links">Links</string>
+    <string name="details_link_fast_compose">Fast Compose on GitHub</string>
+    <string name="details_report_rendering">Report a rendering bug</string>
+    <string name="details_report_binding">Request an unsupported API</string>
+    <string name="details_report_editor">Report an editor issue</string>
+    <string name="dialog_close">Close</string>
+</resources>
