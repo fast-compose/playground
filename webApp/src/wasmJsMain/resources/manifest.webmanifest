@@ -1,0 +1,15 @@
+{
+  "name": "Fast Compose Playground",
+  "short_name": "Playground",
+  "description": "Write Jetpack Compose and see it live.",
+  "start_url": ".",
+  "scope": ".",
+  "display": "standalone",
+  "background_color": "#FFFFFF",
+  "theme_color": "#F8F8F8",
+  "categories": ["developer", "education", "productivity"],
+  "icons": [
+    { "src": "logo.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}

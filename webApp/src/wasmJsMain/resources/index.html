@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fast Compose Playground - Run Jetpack Compose online with live previews</title>
+
+    <!-- search engines -->
+    <meta name="description"
+          content="Write Jetpack Compose in your browser and see every @Preview update as you type. No Kotlin compiler, no build: Fast Compose runs Material 3, animations and Canvas code right in the page. 20+ examples included.">
+    <meta name="keywords"
+          content="Jetpack Compose, Compose online, Compose playground, Compose Multiplatform, Kotlin playground, Kotlin online editor, live preview, @Preview, Material 3, Android UI, Fast Compose">
+    <meta name="author" content="Fast Compose">
+    <meta name="application-name" content="Fast Compose Playground">
+    <meta name="robots" content="index, follow, max-image-preview:large">
+    <link rel="canonical" href="https://fast-compose.github.io/playground/">
+    <meta name="theme-color" content="#F8F8F8">
+    <meta name="color-scheme" content="light dark">
+
+    <!-- link previews -->
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:site_name" content="Fast Compose Playground">
+    <meta property="og:title" content="Fast Compose Playground - Run Jetpack Compose online">
+    <meta property="og:description"
+          content="Write Jetpack Compose in your browser and see every @Preview update as you type. No compiler, no build.">
+    <meta property="og:url" content="https://fast-compose.github.io/playground/">
+    <meta property="og:image" content="https://fast-compose.github.io/playground/icon-512.png">
+    <meta property="og:image:width" content="512">
+    <meta property="og:image:height" content="512">
+    <meta property="og:image:alt" content="The Fast Compose Playground logo">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Fast Compose Playground - Run Jetpack Compose online">
+    <meta name="twitter:description"
+          content="Write Jetpack Compose in your browser and see every @Preview update as you type. No compiler, no build.">
+    <meta name="twitter:image" content="https://fast-compose.github.io/playground/icon-512.png">
+    <meta name="twitter:image:alt" content="The Fast Compose Playground logo">
+
+    <!-- installed web app -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="Playground">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+
+    <!-- what the site is, for search engines that read structured data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Fast Compose Playground",
+        "alternateName": "Compose Playground",
+        "url": "https://fast-compose.github.io/playground/",
+        "description": "Write Jetpack Compose in your browser and see every @Preview update as you type. Fast Compose parses and runs the code without a Kotlin compiler or a build.",
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "Web, Android, Windows, macOS, Linux",
+        "browserRequirements": "Requires a browser with WebAssembly garbage collection support",
+        "isAccessibleForFree": true,
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+        "image": "https://fast-compose.github.io/playground/icon-512.png",
+        "featureList": [
+            "Live previews of every @Preview as you type",
+            "Material 3 components, icons, animations, gestures and Canvas drawing",
+            "Network images with AsyncImage",
+            "20+ ready-made examples",
+            "Code, split and preview layouts with resizable panes",
+            "19 editor themes",
+            "Share a playground as a link"
+        ],
+        "sameAs": [
+            "https://github.com/fast-compose/playground",
+            "https://play.google.com/store/apps/details?id=ma7moud3ly.fast.compose.playground"
+        ],
+        "author": {
+            "@type": "Organization",
+            "name": "Fast Compose",
+            "url": "https://github.com/fast-compose"
+        }
+    }
+    </script>
+
+    <!-- icons -->
+    <link rel="icon" type="image/png" href="favicon.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="logo.png" sizes="192x192">
+    <link rel="apple-touch-icon" href="logo.png">
+    <link rel="manifest" href="manifest.webmanifest">
+
+    <link type="text/css" rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="loader">
+        <img src="logo.png" width="88" height="88" alt="Fast Compose Playground">
+        <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 50 50" role="presentation">
+            <circle cx="25" cy="25" r="20" stroke="#E5E5E5" stroke-width="4" fill="none"/>
+            <circle cx="25" cy="25" r="20" stroke="#0078D4" stroke-width="4" fill="none" stroke-linecap="round"
+                    stroke-dasharray="90 125">
+                <animateTransform attributeName="transform" type="rotate" from="0 25 25" to="360 25 25" dur="1s"
+                                  repeatCount="indefinite"/>
+            </circle>
+        </svg>
+    </div>
+    <!-- shown when scripts are off; also the only text a crawler without scripts can read -->
+    <noscript>
+        <h1>Fast Compose Playground</h1>
+        <p>Write Jetpack Compose in your browser and see every <code>@Preview</code> update as you type. There is no
+            Kotlin compiler and no build: Fast Compose parses and runs the code right in the page.</p>
+        <h2>Features</h2>
+        <ul>
+            <li>Live previews of every <code>@Preview</code> function</li>
+            <li>Material 3 components, icons, animations, gestures and Canvas drawing</li>
+            <li>20+ examples: buttons, text fields, lists, dialogs, bottom sheets, pagers, charts and more</li>
+            <li>Code, split and preview layouts with resizable panes</li>
+            <li>19 editor themes, undo and redo, search and autocomplete</li>
+            <li>Share a playground as a link</li>
+        </ul>
+        <p>Fast Compose Playground needs JavaScript and WebAssembly to run. It is also available for
+            <a href="https://play.google.com/store/apps/details?id=ma7moud3ly.fast.compose.playground">Android</a>
+            and for <a href="https://github.com/fast-compose/playground/releases/latest">Windows, macOS and Linux</a>.
+            The source code is on <a href="https://github.com/fast-compose/playground">GitHub</a>.</p>
+    </noscript>
+    <script type="application/javascript" src="webApp.js"></script>
+</body>
+</html>
