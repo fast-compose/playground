@@ -83,7 +83,7 @@ RELEASE_KEY_PASSWORD=...
 | Event | What runs | Output |
 |---|---|---|
 | Pull request to `main` | Debug builds: `default` Android APK, Linux `.deb`, development web app | Workflow artifacts |
-| Tag `v*` | Release builds: signed `default` Android APK, `.deb`, `.dmg` and `.msi`, production web app | A GitHub release |
+| Tag `v*` | Release builds: signed `default` Android APK, `.deb`, `.dmg` and `.msi`, production web app | A GitHub release, and the web app on the website |
 
 CI builds only the `default` flavor, so it needs no Firebase config. The Google Play bundle is built and uploaded by
 hand.
@@ -92,6 +92,9 @@ hand.
 - The release is created after every build succeeds, with generated notes and these files:
   `compose-playground-v0.1.0.apk`, `-linux-amd64.deb`, `-macos.dmg`, `-windows.msi` and `-web.zip`.
 - macOS packages need a major version above 0, so the `.dmg` of `0.x.y` carries version `1.x.y`.
+- After the release, the production web app replaces the `playground` folder of
+  [fast-compose.github.io](https://github.com/fast-compose/fast-compose.github.io), which serves it at
+  [fast-compose.github.io/playground](https://fast-compose.github.io/playground/).
 
 ### Secrets
 
@@ -103,6 +106,9 @@ Set these as repository secrets, under Settings → Secrets and variables → Ac
 | `RELEASE_STORE_PASSWORD` | The keystore's password |
 | `RELEASE_KEY_ALIAS` | The key's alias |
 | `RELEASE_KEY_PASSWORD` | The key's password |
+| `SITE_DEPLOY_TOKEN` | A fine-grained personal access token with **Contents: Read and write** on `fast-compose/fast-compose.github.io` only |
+
+`GITHUB_TOKEN` can only push to this repository, so the website needs its own token.
 
 ## Versions
 
