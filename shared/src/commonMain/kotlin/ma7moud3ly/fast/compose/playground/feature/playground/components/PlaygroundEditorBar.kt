@@ -17,6 +17,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Redo
 import androidx.compose.material.icons.automirrored.outlined.Undo
+import androidx.compose.material.icons.outlined.AutoFixHigh
 import androidx.compose.material.icons.outlined.Code
 import androidx.compose.material.icons.outlined.HorizontalSplit
 import androidx.compose.material.icons.outlined.Refresh
@@ -48,6 +49,7 @@ import io.ma7moud3ly.nemo.model.EditorThemes
 import ma7moud3ly.fast.compose.playground.feature.playground.model.PlaygroundEvent
 import ma7moud3ly.fast.compose.playground.model.ViewMode
 import ma7moud3ly.fast.compose.playground.resources.Res
+import ma7moud3ly.fast.compose.playground.resources.editor_format
 import ma7moud3ly.fast.compose.playground.resources.editor_redo
 import ma7moud3ly.fast.compose.playground.resources.editor_search
 import ma7moud3ly.fast.compose.playground.resources.editor_undo
@@ -102,9 +104,9 @@ private fun PlaygroundEditorBarPreviewCompact() {
 }
 
 /**
- * The bar above the panes. On its left are the editor's actions: undo and redo, search, and the font size; they
- * are hidden while only the preview is shown. On its right are run again, the logs toggle with the number of
- * problems, and the switch between the code, both panes and the preview.
+ * The bar above the panes. On its left are the editor's actions: undo and redo, search and format, and the font
+ * size; they are hidden while only the preview is shown. On its right are run again, the logs toggle with the number
+ * of problems, and the switch between the code, both panes and the preview.
  *
  * @param vertical whether the panes are stacked; the split icon then turns to match
  * @param compact whether the window is narrow; the buttons are then smaller and the font size is not shown
@@ -200,6 +202,12 @@ private fun EditorActions(
         label = stringResource(Res.string.editor_search),
         compact = compact,
         onClick = { uiEvents(PlaygroundEvent.Search) }
+    )
+    ToolbarButton(
+        icon = Icons.Outlined.AutoFixHigh,
+        label = stringResource(Res.string.editor_format),
+        compact = compact,
+        onClick = { uiEvents(PlaygroundEvent.Format) }
     )
     ToolbarDivider(compact = compact)
     ToolbarButton(

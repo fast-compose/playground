@@ -36,7 +36,7 @@ drawing.
 **Code, split or preview**: show the editor, the preview, or both. Drag the bar between them to resize the panes;
 double click it to reset them.
 
-**Editor**: undo, redo, search, font size and autocomplete. Lines with errors are highlighted, and the logs open
+**Editor**: undo, redo, search, format, font size and autocomplete. Lines with errors are highlighted, and the logs open
 when there are problems; click an error to jump to its line.
 
 **Themes**: every [nemo-editor](https://github.com/Ma7moud3ly/nemo-editor) theme paints the whole app. VS Code
