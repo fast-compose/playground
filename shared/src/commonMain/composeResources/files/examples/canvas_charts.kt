@@ -18,7 +18,7 @@ fun CanvasChartsExample() {
     LaunchedEffect(Unit) {
         progress.animateTo(1f, tween(1200, easing = FastOutSlowInEasing))
     }
-    val max = sales.maxOf { it.value }
+    val max = sales.maxByOrNull { it.value }!!.value
     val total = sales.sumOf { it.value.toDouble() }.toFloat()
 
     Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
