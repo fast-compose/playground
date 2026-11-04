@@ -12,6 +12,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import io.ma7moud3ly.nemo.managers.FormatManager
 import io.ma7moud3ly.nemo.model.CodeState
 import io.ma7moud3ly.nemo.model.EditorSettings
 import io.ma7moud3ly.nemo.model.EditorTheme
@@ -69,6 +70,8 @@ class PlaygroundViewModel(
         contentPadding = EditorPadding
     )
 
+    private val formatManager = FormatManager(codeState, editorSettings)
+
     /** The theme of the whole app. */
     val theme: EditorTheme get() = editorSettings.themeState.value
 
@@ -114,6 +117,7 @@ class PlaygroundViewModel(
         when (event) {
             is PlaygroundEvent.Undo -> codeState.undo()
             is PlaygroundEvent.Redo -> codeState.redo()
+            is PlaygroundEvent.Format -> formatManager.format()
             is PlaygroundEvent.ZoomIn -> setFontSize(fontSize + 1)
             is PlaygroundEvent.ZoomOut -> setFontSize(fontSize - 1)
             is PlaygroundEvent.SelectMode -> mode = event.mode

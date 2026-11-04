@@ -8,6 +8,7 @@ import ma7moud3ly.fast.compose.playground.model.ViewMode
 sealed interface PlaygroundEvent {
     data object Undo : PlaygroundEvent
     data object Redo : PlaygroundEvent
+    data object Format : PlaygroundEvent
 
     /** Opens the search dialog. */
     data object Search : PlaygroundEvent

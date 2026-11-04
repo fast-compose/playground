@@ -223,6 +223,13 @@ jobs:
           path: out/*
           if-no-files-found: error
 
+      # the same build, unzipped, for the website; not attached to the release
+      - uses: actions/upload-artifact@v7
+        with:
+          name: site-web
+          path: webApp/build/dist/wasmJs/productionExecutable/
+          if-no-files-found: error
+
   publish:
     name: publish GitHub release
     needs: [android, desktop, web]
@@ -251,3 +258,42 @@ jobs:
           fail_on_unmatched_files: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # Replaces the playground on the website, https://fast-compose.github.io/playground/, once the release is out.
+  deploy-web:
+    name: deploy to fast-compose.github.io
+    needs: publish
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the website
+        uses: actions/checkout@v7
+        with:
+          repository: fast-compose/fast-compose.github.io
+          ref: main
+          token: ${{ secrets.SITE_DEPLOY_TOKEN }}
+          path: site
+
+      # the old folder is removed first, so files of earlier builds don't stay behind
+      - name: Clear the old playground
+        run: |
+          rm -rf site/playground
+          mkdir -p site/playground
+
+      - uses: actions/download-artifact@v8
+        with:
+          name: site-web
+          path: site/playground
+
+      - name: Commit and push
+        working-directory: site
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A playground
+          if git diff --cached --quiet; then
+            echo "The playground on the website is already ${GITHUB_REF_NAME}"
+            exit 0
+          fi
+          git commit -m "playground: deploy ${GITHUB_REF_NAME#v}"
+          git push origin main
