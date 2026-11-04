@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="shared/src/commonMain/composeResources/drawable/logo.png" alt="Compose Playground logo" width="112" />
+<img src="docs/images/logo.png" alt="Fast Compose Playground logo" width="160" />
 
 # Fast Compose Playground
 
