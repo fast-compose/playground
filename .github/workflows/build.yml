@@ -210,6 +210,16 @@ jobs:
       - name: Build the production web app
         run: ./gradlew :webApp:wasmJsBrowserDistribution
 
+      # Fails if a minified Skia export wrapper still calls Wasm as a tail call, e.g. (...e)=>(y=k._.malloc)(...e), so
+      # the Safari 27.2 workaround (webApp/src/wasmJsMain/js/skiko-no-tail-call-loader.cjs) can't be dropped silently.
+      - name: Check the Safari 27.2 workaround
+        run: |
+          bundle=webApp/build/dist/wasmJs/productionExecutable/webApp.js
+          left=$(grep -oE '\(\.\.\.\w+\)=>\(\w+=\w+\._\.\w+\)\(\.\.\.\w+\)' $bundle | wc -l)
+          patched=$(grep -o 'try{return(' $bundle | wc -l)
+          echo "Skia wrappers: $patched patched, $left tail calls left"
+          test "$left" -eq 0 && test "$patched" -gt 0
+
       - name: Zip it
         run: |
           set -euo pipefail
