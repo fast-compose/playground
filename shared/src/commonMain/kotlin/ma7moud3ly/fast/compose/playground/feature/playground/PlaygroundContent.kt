@@ -12,6 +12,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Bolt
+import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -24,6 +27,7 @@ import androidx.compose.runtime.movableContentOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
@@ -38,15 +42,22 @@ import io.ma7moud3ly.nemo.model.Language
 import io.ma7moud3ly.nemo.search.FindReplaceDialog
 import ma7moud3ly.fast.compose.interpreter.Registry
 import ma7moud3ly.fast.compose.playground.feature.playground.dialog.DetailsDialog
+import ma7moud3ly.fast.compose.playground.feature.playground.components.FAST_COMPOSE_URL
+import ma7moud3ly.fast.compose.playground.feature.playground.components.NEMO_EDITOR_URL
 import ma7moud3ly.fast.compose.playground.feature.playground.components.PlaygroundEditorBar
 import ma7moud3ly.fast.compose.playground.feature.playground.components.PlaygroundTopBar
 import ma7moud3ly.fast.compose.playground.feature.playground.model.PlaygroundEvent
 import ma7moud3ly.fast.compose.playground.model.PlaygroundConfig
 import ma7moud3ly.fast.compose.playground.model.SAMPLE_CODE
 import ma7moud3ly.fast.compose.playground.model.ViewMode
+import ma7moud3ly.fast.compose.playground.platform.LocalPlatform
+import ma7moud3ly.fast.compose.playground.platform.isAndroid
 import ma7moud3ly.fast.compose.playground.resources.Res
+import ma7moud3ly.fast.compose.playground.resources.credit_fast_compose
+import ma7moud3ly.fast.compose.playground.resources.credit_nemo_editor
 import ma7moud3ly.fast.compose.playground.resources.logs_title
 import ma7moud3ly.fast.compose.playground.resources.mode_split
+import ma7moud3ly.fast.compose.playground.ui.components.CreditPill
 import ma7moud3ly.fast.compose.playground.ui.components.SplitPane
 import ma7moud3ly.fast.compose.playground.ui.theme.AppTheme
 import ma7moud3ly.fast.compose.playground.ui.theme.AppThemes
@@ -142,19 +153,31 @@ internal fun PlaygroundContent(
         onDismiss = { showSearch = false }
     )
 
-    // Each pane keeps its state, such as the editor's scroll and the previews' state, as the mode changes.
+    // Each pane keeps its state, such as the editor's scroll and the previews' state, as the mode changes. Each one
+    // credits the library behind it, except on compact screens and on Android.
     val editor = remember(codeState, settings) {
-        movableContentOf {
-            NemoCodeEditor(
-                state = codeState,
-                settings = settings,
-                modifier = Modifier.fillMaxSize()
-            )
+        movableContentOf { showCredit: Boolean ->
+            Box(Modifier.fillMaxSize()) {
+                NemoCodeEditor(
+                    state = codeState,
+                    settings = settings,
+                    modifier = Modifier.fillMaxSize()
+                )
+                // above the editor's scroll bars
+                if (showCredit) CreditPill(
+                    icon = Icons.Outlined.Edit,
+                    text = stringResource(Res.string.credit_nemo_editor),
+                    url = NEMO_EDITOR_URL,
+                    modifier = Modifier
+                        .align(Alignment.BottomEnd)
+                        .padding(end = 18.dp, bottom = 16.dp)
+                )
+            }
         }
     }
     val preview = remember(code, registry) {
-        movableContentOf { runs: Int ->
-            PreviewPane(code = code, registry = registry, runs = runs)
+        movableContentOf { runs: Int, showCredit: Boolean ->
+            PreviewPane(code = code, registry = registry, runs = runs, showCredit = showCredit)
         }
     }
 
@@ -201,16 +224,17 @@ internal fun PlaygroundContent(
                 )
                 HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
                 val panes = Modifier.fillMaxWidth().weight(1f)
+                val showCredits = compact.not() && LocalPlatform.current.isAndroid.not()
                 when (mode) {
-                    ViewMode.EDIT -> Box(panes) { editor() }
-                    ViewMode.PREVIEW -> Box(panes) { preview(runs) }
+                    ViewMode.EDIT -> Box(panes) { editor(showCredits) }
+                    ViewMode.PREVIEW -> Box(panes) { preview(runs, showCredits) }
                     ViewMode.SPLIT -> SplitPane(
                         vertical = compact,
                         ratio = split,
                         onRatioChange = { uiEvents(PlaygroundEvent.ChangeSplit(it)) },
                         onReset = { uiEvents(PlaygroundEvent.ResetSplit) },
-                        first = { editor() },
-                        second = { preview(runs) },
+                        first = { editor(showCredits) },
+                        second = { preview(runs, showCredits) },
                         minRatio = PlaygroundConfig.SPLIT_MIN,
                         maxRatio = PlaygroundConfig.SPLIT_MAX,
                         splitterLabel = stringResource(Res.string.mode_split),
@@ -234,14 +258,15 @@ internal fun PlaygroundContent(
 }
 
 /**
- * Every `@Preview` of [code], on the theme's background with a grid of dots. A new [runs] value restarts them,
- * resetting their state and animations.
+ * Every `@Preview` of [code], on the theme's background with a grid of dots, with a credit to Fast Compose in the
+ * corner when [showCredit]. A new [runs] value restarts them, resetting their state and animations.
  */
 @Composable
 private fun PreviewPane(
     code: ComposeCode,
     registry: Registry,
-    runs: Int
+    runs: Int,
+    showCredit: Boolean
 ) {
     val dots = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.12f)
     Box(
@@ -269,5 +294,13 @@ private fun PreviewPane(
                 modifier = Modifier.fillMaxSize()
             )
         }
+        if (showCredit) CreditPill(
+            icon = Icons.Outlined.Bolt,
+            text = stringResource(Res.string.credit_fast_compose),
+            url = FAST_COMPOSE_URL,
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(end = 12.dp, bottom = 12.dp)
+        )
     }
 }
