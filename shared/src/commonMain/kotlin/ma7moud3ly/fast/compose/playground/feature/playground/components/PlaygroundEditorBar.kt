@@ -1,9 +1,10 @@
 package ma7moud3ly.fast.compose.playground.feature.playground.components
 
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -33,6 +34,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -41,6 +43,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.pointer.PointerIcon
 import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -60,6 +63,7 @@ import ma7moud3ly.fast.compose.playground.resources.logs_show
 import ma7moud3ly.fast.compose.playground.resources.mode_edit
 import ma7moud3ly.fast.compose.playground.resources.mode_preview
 import ma7moud3ly.fast.compose.playground.resources.mode_split
+import ma7moud3ly.fast.compose.playground.resources.mode_split_short
 import ma7moud3ly.fast.compose.playground.resources.preview_restart
 import ma7moud3ly.fast.compose.playground.ui.components.ToolbarButton
 import ma7moud3ly.fast.compose.playground.ui.components.ToolbarDivider
@@ -266,6 +270,7 @@ private fun ViewMode.icon(vertical: Boolean): ImageVector = when (this) {
     ViewMode.PREVIEW -> Icons.Outlined.Visibility
 }
 
+/** What each mode's tab says to screen readers. */
 private val ViewMode.label: StringResource
     get() = when (this) {
         ViewMode.EDIT -> Res.string.mode_edit
@@ -273,7 +278,18 @@ private val ViewMode.label: StringResource
         ViewMode.PREVIEW -> Res.string.mode_preview
     }
 
-/** A pill of icon tabs that picks the [ViewMode]. */
+/** What each mode's tab shows beside its icon. */
+private val ViewMode.shortLabel: StringResource
+    get() = when (this) {
+        ViewMode.EDIT -> Res.string.mode_edit
+        ViewMode.SPLIT -> Res.string.mode_split_short
+        ViewMode.PREVIEW -> Res.string.mode_preview
+    }
+
+/**
+ * A segmented control that picks the [ViewMode]: a track with one tab per mode, the selected tab raised on it as a
+ * chip with the accent-colored icon. Each tab shows its icon and name, or only its icon when [compact].
+ */
 @Composable
 private fun ModeSwitch(
     mode: ViewMode,
@@ -282,31 +298,44 @@ private fun ModeSwitch(
     onSelect: (ViewMode) -> Unit
 ) {
     val colors = MaterialTheme.colorScheme
-    val shape = RoundedCornerShape(8.dp)
     Row(
         modifier = Modifier
             .selectableGroup()
-            .clip(shape)
+            .clip(RoundedCornerShape(10.dp))
             .background(colors.surfaceVariant)
-            .padding(2.dp),
+            .padding(3.dp),
         horizontalArrangement = Arrangement.spacedBy(2.dp)
     ) {
         ViewMode.entries.forEach { item ->
             val selected = mode == item
-            Box(
+            val chip by animateColorAsState(if (selected) colors.background else Color.Transparent)
+            val border by animateColorAsState(if (selected) colors.outlineVariant else Color.Transparent)
+            val content = if (selected) colors.onSurface else colors.onSurface.copy(alpha = 0.6f)
+            val shape = RoundedCornerShape(7.dp)
+            Row(
                 modifier = Modifier
-                    .size(width = if (compact) 30.dp else 36.dp, height = if (compact) 26.dp else 30.dp)
-                    .clip(RoundedCornerShape(6.dp))
-                    .background(if (selected) colors.primary else Color.Transparent)
+                    .height(if (compact) 26.dp else 28.dp)
+                    .clip(shape)
+                    .background(chip)
+                    .border(1.dp, border, shape)
                     .pointerHoverIcon(PointerIcon.Hand)
-                    .selectable(selected = selected, role = Role.Tab, onClick = { onSelect(item) }),
-                contentAlignment = Alignment.Center
+                    .selectable(selected = selected, role = Role.Tab, onClick = { onSelect(item) })
+                    .padding(horizontal = if (compact) 7.dp else 10.dp),
+                horizontalArrangement = Arrangement.spacedBy(6.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
                     imageVector = item.icon(vertical),
                     contentDescription = stringResource(item.label),
-                    tint = if (selected) colors.onPrimary else colors.onSurfaceVariant,
-                    modifier = Modifier.size(if (compact) 16.dp else 18.dp)
+                    tint = if (selected) colors.primary else content,
+                    modifier = Modifier.size(16.dp)
+                )
+                if (compact.not()) Text(
+                    text = stringResource(item.shortLabel),
+                    style = MaterialTheme.typography.labelMedium,
+                    fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Medium,
+                    color = content,
+                    maxLines = 1
                 )
             }
         }

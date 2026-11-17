@@ -3,9 +3,6 @@
     <string name="app_name">Compose Playground</string>
     <string name="app_wordmark_compose">Fast Compose</string>
     <string name="app_wordmark_playground">Playground</string>
-    <string name="app_powered_by">powered by</string>
-    <string name="app_fast_compose">Fast Compose</string>
-    <string name="app_nemo_editor">Nemo Editor</string>
 
     <!-- top bar -->
     <string name="toolbar_github">GitHub</string>
@@ -36,16 +33,21 @@
     <string name="editor_zoom_out">Smaller font</string>
     <string name="mode_edit">Code</string>
     <string name="mode_split">Code and preview</string>
+    <string name="mode_split_short">Split</string>
     <string name="mode_preview">Preview</string>
     <string name="preview_restart">Run again</string>
     <string name="logs_title">Logs</string>
     <string name="logs_show">Show logs</string>
     <string name="logs_hide">Hide logs</string>
 
+    <!-- credits inside the panes -->
+    <string name="credit_fast_compose">Rendered by Fast Compose</string>
+    <string name="credit_nemo_editor">Edited with Nemo Editor</string>
+
     <!-- details dialog -->
     <string name="details_title">About</string>
     <string name="details_description">Write Jetpack Compose and see it live. There is no compiler and no build: Fast Compose parses and runs the code right in the app.</string>
-    <string name="details_versions">Versions</string>
+    <string name="details_powered_by">Powered by</string>
     <string name="details_fast_compose">fast-compose</string>
     <string name="details_nemo">nemo-editor</string>
     <string name="details_links">Links</string>

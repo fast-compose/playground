@@ -3,9 +3,6 @@ package ma7moud3ly.fast.compose.playground.feature.playground.components
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.interaction.collectIsHoveredAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -53,16 +50,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.input.pointer.PointerIcon
-import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.platform.LocalUriHandler
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -75,10 +67,7 @@ import ma7moud3ly.fast.compose.playground.model.ExampleCategory
 import ma7moud3ly.fast.compose.playground.platform.LocalPlatform
 import ma7moud3ly.fast.compose.playground.platform.isWeb
 import ma7moud3ly.fast.compose.playground.resources.Res
-import ma7moud3ly.fast.compose.playground.resources.app_fast_compose
 import ma7moud3ly.fast.compose.playground.resources.app_name
-import ma7moud3ly.fast.compose.playground.resources.app_nemo_editor
-import ma7moud3ly.fast.compose.playground.resources.app_powered_by
 import ma7moud3ly.fast.compose.playground.resources.app_wordmark_compose
 import ma7moud3ly.fast.compose.playground.resources.app_wordmark_playground
 import ma7moud3ly.fast.compose.playground.resources.examples_animations
@@ -236,10 +225,11 @@ private fun DropdownButton(
     }
 }
 
-/**
- * The logo, then the app's name with a credit to Fast Compose and nemo-editor under it; only the logo and name on a
- * [compact] bar.
- */
+/** The colors of the logo's faces, green to blue, that the word "Playground" fades through on every theme. */
+private val BrandGreen = Color(0xFF3FC38A)
+private val BrandBlue = Color(0xFF307BD6)
+
+/** The logo, then the app's name on one line. */
 @Composable
 private fun AppBrand(compact: Boolean) {
     Row(
@@ -249,85 +239,38 @@ private fun AppBrand(compact: Boolean) {
         Image(
             painter = painterResource(Res.drawable.logo),
             contentDescription = stringResource(Res.string.app_name),
-            modifier = Modifier.size(if (compact) 26.dp else 32.dp)
+            modifier = Modifier.size(if (compact) 26.dp else 30.dp)
         )
-        Column {
-            Wordmark(compact = compact)
-            if (compact.not()) PoweredBy()
-        }
+        Wordmark(compact = compact)
     }
-}
-
-/** The app's name: "Fast Compose" in the regular face and muted, "Playground" in the semi-bold face. */
-@Composable
-private fun Wordmark(compact: Boolean) {
-    val compose = stringResource(Res.string.app_wordmark_compose)
-    val playground = stringResource(Res.string.app_wordmark_playground)
-    val muted = MaterialTheme.colorScheme.onSurfaceVariant
-    Text(
-        text = buildAnnotatedString {
-            withStyle(SpanStyle(fontWeight = FontWeight.Normal, color = muted)) { append(compose) }
-            append(" ")
-            withStyle(SpanStyle(fontWeight = FontWeight.SemiBold)) { append(playground) }
-        },
-        fontSize = if (compact) 15.sp else 18.sp,
-        lineHeight = 19.sp,
-        letterSpacing = (-0.2).sp,
-        color = MaterialTheme.colorScheme.onSurface,
-        maxLines = 1
-    )
 }
 
 /**
- * Credit to the engine that runs the previews and to the code editor, in small print under the wordmark: "powered by
- * Fast Compose & Nemo Editor", each name a link to its repository.
+ * The app's name: "Fast Compose" in the theme's text color, then "Playground" in the logo's green-to-blue gradient,
+ * both semi-bold on one line.
  */
 @Composable
-private fun PoweredBy() {
-    Row(
-        horizontalArrangement = Arrangement.spacedBy(3.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        SmallPrint(stringResource(Res.string.app_powered_by))
-        CreditLink(stringResource(Res.string.app_fast_compose), FAST_COMPOSE_URL)
-        SmallPrint("&")
-        CreditLink(stringResource(Res.string.app_nemo_editor), NEMO_EDITOR_URL)
-    }
-}
-
-@Composable
-private fun SmallPrint(text: String) {
-    Text(
-        text = text,
-        fontSize = 10.sp,
-        lineHeight = 12.sp,
-        color = MaterialTheme.colorScheme.onSurfaceVariant,
-        maxLines = 1
-    )
-}
-
-/** A name in the accent color that opens [url]; it is underlined while the pointer is over it. */
-@Composable
-private fun CreditLink(text: String, url: String) {
-    val uriHandler = LocalUriHandler.current
-    val interactionSource = remember { MutableInteractionSource() }
-    val hovered by interactionSource.collectIsHoveredAsState()
-    Text(
-        text = text,
-        fontSize = 10.sp,
-        lineHeight = 12.sp,
+private fun Wordmark(compact: Boolean) {
+    val style = MaterialTheme.typography.titleMedium.copy(
+        fontSize = if (compact) 16.sp else 18.sp,
         fontWeight = FontWeight.SemiBold,
-        color = MaterialTheme.colorScheme.primary,
-        textDecoration = if (hovered) TextDecoration.Underline else null,
-        maxLines = 1,
-        modifier = Modifier
-            .pointerHoverIcon(PointerIcon.Hand)
-            .clickable(
-                interactionSource = interactionSource,
-                indication = null,
-                onClick = { uriHandler.openUri(url) }
-            )
+        letterSpacing = (-0.3).sp
     )
+    Row(horizontalArrangement = Arrangement.spacedBy(5.dp)) {
+        Text(
+            text = stringResource(Res.string.app_wordmark_compose),
+            style = style,
+            color = MaterialTheme.colorScheme.onSurface,
+            maxLines = 1,
+            modifier = Modifier.alignByBaseline()
+        )
+        Text(
+            text = stringResource(Res.string.app_wordmark_playground),
+            style = style.copy(brush = Brush.horizontalGradient(listOf(BrandGreen, BrandBlue))),
+            maxLines = 1,
+            modifier = Modifier.alignByBaseline()
+        )
+    }
 }
 
 /** The pages of the more menu: its main list, and the lists its items open. */

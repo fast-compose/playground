@@ -43,11 +43,11 @@ import ma7moud3ly.fast.compose.playground.resources.details_fast_compose
 import ma7moud3ly.fast.compose.playground.resources.details_link_fast_compose
 import ma7moud3ly.fast.compose.playground.resources.details_links
 import ma7moud3ly.fast.compose.playground.resources.details_nemo
+import ma7moud3ly.fast.compose.playground.resources.details_powered_by
 import ma7moud3ly.fast.compose.playground.resources.details_report_binding
 import ma7moud3ly.fast.compose.playground.resources.details_report_editor
 import ma7moud3ly.fast.compose.playground.resources.details_report_rendering
 import ma7moud3ly.fast.compose.playground.resources.details_title
-import ma7moud3ly.fast.compose.playground.resources.details_versions
 import ma7moud3ly.fast.compose.playground.resources.logo
 import ma7moud3ly.fast.compose.playground.ui.components.MyDialog
 import ma7moud3ly.fast.compose.playground.ui.theme.AppTheme
@@ -111,7 +111,7 @@ internal fun DetailsDialog(onDismiss: () -> Unit) {
                 color = MaterialTheme.colorScheme.onSurface,
                 textAlign = TextAlign.Center
             )
-            Section(stringResource(Res.string.details_versions)) {
+            Section(stringResource(Res.string.details_powered_by)) {
                 VersionRow(stringResource(Res.string.details_fast_compose), BuildInfo.FAST_COMPOSE_VERSION) {
                     uriHandler.openUri(FAST_COMPOSE_URL)
                 }
