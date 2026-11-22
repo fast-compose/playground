@@ -76,6 +76,9 @@ kotlin {
 
             // settings storage
             implementation(libs.settings.noArg)
+
+            // QR codes for shared links
+            implementation(libs.qrose)
         }
         androidMain.dependencies {
             implementation(libs.compose.uiTooling)

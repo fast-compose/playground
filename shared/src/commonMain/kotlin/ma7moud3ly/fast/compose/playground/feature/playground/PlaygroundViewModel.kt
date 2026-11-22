@@ -22,6 +22,7 @@ import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import ma7moud3ly.fast.compose.playground.feature.playground.model.PlaygroundEvent
 import ma7moud3ly.fast.compose.playground.managers.StorageManager
@@ -46,14 +47,17 @@ private val EditorPadding = PaddingValues(start = 4.dp, top = 8.dp, end = 8.dp, 
 /**
  * Holds the playground and keeps it in the page address and in storage.
  *
- * On start the playground is read from the page address, then from storage, then from the defaults. Every later
- * change is written back to both. On the web, a link pasted into the address bar of an open playground is loaded.
+ * On start the playground is read from the page address, then from storage, then from the defaults; a compressed
+ * code is unpacked right after. Every later change is written back to both. On the web, a link pasted into the
+ * address bar of an open playground is loaded.
  */
 class PlaygroundViewModel(
     private val storageManager: StorageManager = StorageManager()
 ) : ViewModel() {
 
-    private val initial = restore()
+    private val restored = restore()
+
+    private val initial = restored?.config ?: PlaygroundConfig()
 
     /** The code in the editor. */
     val codeState = CodeState(
@@ -107,9 +111,13 @@ class PlaygroundViewModel(
     private var savedHash = ""
 
     init {
-        save()
+        viewModelScope.launch {
+            // the code goes in before saving starts, so an empty editor is never saved
+            restored?.packedCode?.let { packed -> setCode(UrlCodec.unpack(packed) ?: SAMPLE_CODE) }
+            save()
+        }
         onUrlHashChange { hash ->
-            if (hash != savedHash) UrlCodec.decode(hash)?.let(::load)
+            if (hash != savedHash) viewModelScope.launch { UrlCodec.decodeAll(hash)?.let(::load) }
         }
     }
 
@@ -161,7 +169,7 @@ class PlaygroundViewModel(
     )
 
     /** The address that opens the playground as it is now, showing both panes. */
-    fun link(): String = shareBaseUrl() + "#" + UrlCodec.encode(snapshot().copy(mode = ViewMode.SPLIT))
+    suspend fun link(): String = shareBaseUrl() + "#" + UrlCodec.encode(snapshot().copy(mode = ViewMode.SPLIT))
 
     private fun setFontSize(size: Int) {
         editorSettings.setFontSize(size.coerceIn(PlaygroundConfig.FONT_SIZE_MIN, PlaygroundConfig.FONT_SIZE_MAX))
@@ -175,6 +183,12 @@ class PlaygroundViewModel(
             FindReplaceAction.Replace(start = 0, end = oldCode.length, oldText = oldCode, newText = code)
         )
         codeState.updateText(code, 0)
+    }
+
+    /** Puts [code] in the editor as its starting code, which can't be undone. */
+    private fun setCode(code: String) {
+        codeState.updateText(code, 0)
+        codeState.clearHistory()
     }
 
     /** Reads the code of [example] from the resources and puts it in the editor, showing its preview. */
@@ -201,26 +215,25 @@ class PlaygroundViewModel(
         split = config.split
     }
 
-    /** Writes the playground to the page address and to storage a moment after each change. */
+    /** Writes the playground to the page address and to storage a moment after each change, until cancelled. */
     @OptIn(FlowPreview::class)
-    private fun save() {
-        viewModelScope.launch {
-            snapshotFlow { UrlCodec.encode(snapshot()) }
-                .distinctUntilChanged()
-                .debounce(SAVE_DELAY_MS.milliseconds)
-                .collect { playground ->
-                    savedHash = playground
-                    writeUrlHash(playground)
-                    storageManager.playground = playground
-                }
-        }
+    private suspend fun save() {
+        snapshotFlow { snapshot() }
+            .distinctUntilChanged()
+            .debounce(SAVE_DELAY_MS.milliseconds)
+            .map { UrlCodec.encode(it) }
+            .distinctUntilChanged()
+            .collect { playground ->
+                savedHash = playground
+                writeUrlHash(playground)
+                storageManager.playground = playground
+            }
     }
 
-    /** The playground in the page address, else the one in storage, else the default one. */
-    private fun restore(): PlaygroundConfig =
+    /** The playground in the page address, else the one in storage; null on a first visit. */
+    private fun restore(): UrlCodec.Decoded? =
         UrlCodec.decode(readUrlHash())
             ?: UrlCodec.decode(storageManager.playground)
-            ?: PlaygroundConfig()
 }
 
 /** Offset of the first character of 1-based [line] in [text]. */

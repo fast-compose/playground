@@ -175,10 +175,8 @@ internal fun PlaygroundTopBar(
             icon = Icons.Outlined.Share,
             label = stringResource(Res.string.toolbar_share),
             showLabel = compact.not(),
-            filled = true,
             compact = compact,
-            onClick = { uiEvents(PlaygroundEvent.Share) },
-            modifier = Modifier.padding(horizontal = if (compact) 2.dp else 4.dp)
+            onClick = { uiEvents(PlaygroundEvent.Share) }
         )
         if (compact) MoreMenu(
             theme = theme,

@@ -36,6 +36,12 @@ expect fun onUrlHashChange(onChange: (String) -> Unit)
 /** The address shared links start with: this page on the web, the public playground elsewhere. */
 expect fun shareBaseUrl(): String
 
+/** [bytes] compressed with raw deflate (no zlib header), or null when the platform can't compress. */
+expect suspend fun deflateRaw(bytes: ByteArray): ByteArray?
+
+/** The bytes [deflated] by [deflateRaw], or null when they can't be read. */
+expect suspend fun inflateRaw(deflated: ByteArray): ByteArray?
+
 /** A function that puts a text on the clipboard. */
 @Composable
 expect fun rememberCopyText(): (String) -> Unit
