@@ -34,6 +34,6 @@ sealed interface PlaygroundEvent {
     /** Replaces the code with the code of [example]; it can be undone. */
     data class OpenExample(val example: Example) : PlaygroundEvent
 
-    /** Copies a link that opens the playground as it is now, showing both panes. */
+    /** Opens the share dialog, with a link and a QR code that open the playground as it is now, showing both panes. */
     data object Share : PlaygroundEvent
 }

@@ -42,8 +42,9 @@ when there are problems; click an error to jump to its line.
 **Themes**: every [nemo-editor](https://github.com/Ma7moud3ly/nemo-editor) theme paints the whole app. VS Code
 Light is the default.
 
-**Share** (web): copy a link that opens the playground with both panes. On the web the page address always holds the
-code, theme, font size and layout, so a reload or a link brings them back.
+**Share** (web): share the playground as a link or a QR code that opens it with both panes. The code is compressed
+into the link, and on the web the page address always holds the code, theme, font size and layout, so a reload or a
+link brings them back.
 
 **Phones and wide screens**: on a narrow screen the panes are stacked and the buttons are smaller.
 

@@ -20,7 +20,8 @@ us. You can clear it at any time by clearing the app's data or your browser's si
 
 ## Shared links
 
-On the web, the Share button copies a link that holds your code. Only the people you send the link to can see it.
+On the web, the Share button gives a link, or a QR code of it, that holds your code. Only the people you send it to
+can see it.
 
 ## Network access
 
